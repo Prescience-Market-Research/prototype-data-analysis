@@ -49,57 +49,57 @@ def create_layout():
                 defaultColDef={"editable": True},
             ),
             html.Div(style={"height": "50px"}),  # Adds a gap between sections
-            html.H2("Responses"),
-            AgGrid(
-                id="responses_grid",
-                rowData=responses_data.to_dict("records"),
-                columnDefs=[
-                    {
-                        "headerName": "Provider",
-                        "children": [
-                            {"field": "Telstra"},
-                            {"field": "Optus"},
-                            {"field": "Vodafone"},
-                        ],
-                    },
-                    {
-                        "headerName": "Plan Type",
-                        "children": [
-                            {"field": "Month to Month"},
-                            {"field": "Pre-Paid Cap"},
-                            {"field": "Pre-Paid Bulk Buy"},
-                        ],
-                    },
-                    {
-                        "headerName": "Network Coverage",
-                        "children": [
-                            {"field": "Full Coverage"},
-                            {"field": "Broad Coverage"},
-                            {"field": "Partial Coverage"},
-                        ],
-                    },
-                    {
-                        "headerName": "Monthly Spend",
-                        "children": [
-                            {"field": "$10"},
-                            {"field": "$25"},
-                            {"field": "$50"},
-                            {"field": "$80"},
-                        ],
-                    },
-                    {
-                        "headerName": "Recharge Amount",
-                        "children": [
-                            {"field": "$50"},
-                            {"field": "$100"},
-                            {"field": "$365"},
-                        ],
-                    },
-                ],
-                defaultColDef={"editable": True},
-            ),
+            # html.H2("Responses"),
+            # AgGrid(
+            #     id="responses_grid",
+            #     rowData=responses_data.to_dict("records"),
+            #     columnDefs=[
+            #         {
+            #             "headerName": "Provider",
+            #             "children": [
+            #                 {"field": "Telstra"},
+            #                 {"field": "Optus"},
+            #                 {"field": "Vodafone"},
+            #             ],
+            #         },
+            #         {
+            #             "headerName": "Plan Type",
+            #             "children": [
+            #                 {"field": "Month to Month"},
+            #                 {"field": "Pre-Paid Cap"},
+            #                 {"field": "Pre-Paid Bulk Buy"},
+            #             ],
+            #         },
+            #         {
+            #             "headerName": "Network Coverage",
+            #             "children": [
+            #                 {"field": "Full Coverage"},
+            #                 {"field": "Broad Coverage"},
+            #                 {"field": "Partial Coverage"},
+            #             ],
+            #         },
+            #         {
+            #             "headerName": "Monthly Spend",
+            #             "children": [
+            #                 {"field": "$10"},
+            #                 {"field": "$25"},
+            #                 {"field": "$50"},
+            #                 {"field": "$80"},
+            #             ],
+            #         },
+            #         {
+            #             "headerName": "Recharge Amount",
+            #             "children": [
+            #                 {"field": "$50"},
+            #                 {"field": "$100"},
+            #                 {"field": "$365"},
+            #             ],
+            #         },
+            #     ],
+            #     defaultColDef={"editable": True},
+            # ),
             html.Div(style={"height": "50px"}),  # Adds a gap between sections
-            html.H2("Reflected Scenario Grid"),
+            html.H2("Product Specification Reflected"),
             html.Button(
                 "Download CSV Real Value", id="csv-real-value-button", n_clicks=0
             ),
