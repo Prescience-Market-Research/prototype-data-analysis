@@ -1,6 +1,7 @@
 from dash import html, dcc, callback, Output, Input, State
 import dash
 import pandas as pd
+from .helpers.transform_product_specifications import transform_product_specifications
 import plotly.express as px
 from dash_ag_grid import AgGrid
 
@@ -9,89 +10,8 @@ from dash_ag_grid import AgGrid
 product_specifications = pd.read_csv("data/product-specification.csv")
 responses_data = pd.read_csv("data/responses.csv")
 
-# Create a new DataFrame reflecting the values of scenario_grid
-# 1. get the header of the responses_data
-headers = responses_data.columns.tolist()
-product_specifications_config = [
-    {
-        "field": "Provider",
-        "children": [
-            {"field": "Telstra"},
-            {"field": "Optus"},
-            {"field": "Vodafone"},
-        ],
-    },
-    {
-        "field": "Plan Type",
-        "children": [
-            {"field": "Month to Month"},
-            {"field": "Pre-Paid Cap"},
-            {"field": "Pre-Paid Bulk Buy"},
-        ],
-    },
-    {
-        "field": "Network Coverage",
-        "children": [
-            {"field": "Full Coverage"},
-            {"field": "Broad Coverage"},
-            {"field": "Partial Coverage"},
-        ],
-    },
-    {
-        "field": "Monthly Spend",
-        "children": [
-            {"field": "$10"},
-            {"field": "$25"},
-            {"field": "$50"},
-            {"field": "$80"},
-        ],
-    },
-    {
-        "field": "Recharge Amount",
-        "children": [
-            {"field": "$50"},
-            {"field": "$100"},
-            {"field": "$365"},
-        ],
-    },
-]
-print("Header of responses_data:", headers)
-# scenario_reflected_data = pd.DataFrame(columns=header)
-scenario_reflected_data = pd.DataFrame(
-    columns=headers,
-    data=[],
-)
-# loop though each item in product_specifications_config
-# and create a new column in scenario_reflected_data that has all the children of the item
-# field is the column name of the product_specifications
-for item in product_specifications_config:
-    product_specifications_column_name = item["field"]
-    children = item["children"]
-    for child in children:
-        responses_data_column_name = child["field"]
-        product_specifications_col = product_specifications[
-            product_specifications_column_name
-        ]
-        scenario_reflected_data[responses_data_column_name] = (
-            product_specifications_col.apply(
-                lambda x: 1 if pd.notna(x) and x != "" else 0
-            )
-        )
 
-    # scenario_reflected_data[col] = product_specifications[col].apply(lambda x: 1 if pd.notna(x) and x != "" else 0)
-# 2. the value of the product_specifications is the header of the responses_data
-# 3. if the cell has a value, set the value to 1, otherwise set it to 0
-# scenario_reflected_data = pd.DataFrame(
-#     columns=responses_data.columns,
-#     data=[
-#         {
-#             col: 1 if product_specifications[col].any() else 0
-#             for col in responses_data.columns
-#         }
-#         for _ in range(len(product_specifications))
-#     ],
-# )
-print("Scenario reflected data created with columns:", scenario_reflected_data.columns)
+scenario_reflected_data_final = transform_product_specifications(product_specifications)
 
 
 def create_layout():
@@ -126,6 +46,7 @@ def create_layout():
                     )
                     for col in product_specifications.columns
                 ],
+                defaultColDef={"editable": True},
             ),
             html.Div(style={"height": "50px"}),  # Adds a gap between sections
             html.H2("Responses"),
@@ -179,10 +100,15 @@ def create_layout():
             ),
             html.Div(style={"height": "50px"}),  # Adds a gap between sections
             html.H2("Reflected Scenario Grid"),
+            html.Button(
+                "Download CSV Real Value", id="csv-real-value-button", n_clicks=0
+            ),
             AgGrid(
                 id="scenario_reflected_grid",
-                rowData=scenario_reflected_data.to_dict("records"),
+                rowData=scenario_reflected_data_final.to_dict("records"),
                 columnDefs=[
+                    {"field": "On/Off"},
+                    {"field": "Product"},
                     {
                         "headerName": "Provider",
                         "children": [
@@ -208,21 +134,7 @@ def create_layout():
                         ],
                     },
                     {
-                        "headerName": "Monthly Spend",
-                        "children": [
-                            {"field": "$10"},
-                            {"field": "$25"},
-                            {"field": "$50"},
-                            {"field": "$80"},
-                        ],
-                    },
-                    {
-                        "headerName": "Recharge Amount",
-                        "children": [
-                            {"field": "$50"},
-                            {"field": "$100"},
-                            {"field": "$365"},
-                        ],
+                        "field": "Minimum Monthly Spend",
                     },
                 ],
             ),
@@ -253,6 +165,16 @@ def export_data_as_csv(n_clicks):
 
 
 @callback(
+    Output("scenario_reflected_grid", "exportDataAsCsv"),
+    Input("csv-real-value-button", "n_clicks"),
+)
+def export_data_as_csv(n_clicks):
+    if n_clicks:
+        return True
+    return False
+
+
+@callback(
     Output("target-market-data-display", "children"),
     Input("target_market_data_value", "data"),
 )
@@ -272,14 +194,15 @@ def save_updated_table_to_store(updated_data):
 
 @callback(
     Output("scenario_reflected_grid", "rowData"),
-    Input("scenario_grid", "rowData"),
+    Input("scenario_grid", "cellValueChanged"),
+    State("scenario_grid", "rowData"),
 )
-def update_scenario_reflected_grid(scenario_grid_data):
-    if scenario_grid_data:
-        # Convert the data: if a cell has a value, set it to 1; otherwise, set it to 0
-        reflected_data = [
-            {key: 1 if value else 0 for key, value in row.items()}
-            for row in scenario_grid_data
-        ]
-        return reflected_data
-    return []
+def update_scenario_reflected_grid(_, _scenario_grid_data):
+    print("Callback triggered with data222:", _scenario_grid_data)
+    # Convert _scenario_grid_data to a pandas DataFrame
+    scenario_grid_df = pd.DataFrame(_scenario_grid_data)
+
+    # Transform the DataFrame
+    reflected_data = transform_product_specifications(scenario_grid_df)
+    # Convert the transformed DataFrame back to a list of dictionaries for rowData
+    return reflected_data.to_dict("records")
