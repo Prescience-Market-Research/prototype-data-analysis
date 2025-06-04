@@ -5,6 +5,7 @@ from index_string import index_string
 import dash_bootstrap_components as dbc
 from header import create_header
 
+
 app = Dash(
     __name__,
     external_stylesheets=[dbc.themes.MINTY],
@@ -21,5 +22,7 @@ app.layout = html.Div(
     ]
 )
 
+server = app.server
+
 if __name__ == "__main__":
-    app.run_server(debug=False)
+    app.run(debug=True)
