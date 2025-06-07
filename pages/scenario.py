@@ -7,7 +7,14 @@ from dash_ag_grid import AgGrid
 
 
 # Read the CSV file
-product_specifications = pd.read_csv("data/product-specification.csv")
+product_specifications = pd.read_csv("data/product-specification.csv", header=[0, 1])
+# Flatten MultiIndex columns
+product_specifications.columns = [
+    # return col[1] if col[1] is not include Unnamed else col[0]
+    col[0] if "Unnamed:" in col[1] else col[1]
+    for col in product_specifications.columns
+]
+
 responses_data = pd.read_csv("data/responses.csv")
 
 
@@ -26,25 +33,48 @@ def create_layout():
                 id="scenario_grid",
                 rowData=product_specifications.to_dict("records"),
                 columnDefs=[
-                    (
-                        {
-                            "field": col,
-                            "cellRenderer": "OptionComponent",
-                            "editable": True,
-                            "cellRendererParams": {
-                                "options": [
-                                    {"label": "Telstra", "value": "Telstra"},
-                                    {"label": "Optus", "value": "Optus"},
-                                    {"label": "Vodafone", "value": "Vodafone"},
-                                    {"label": "TPG", "value": "TPG"},
-                                    {"label": "Other", "value": "Other"},
-                                ],
+                    {"field": "On/Off"},
+                    {"field": "Product"},
+                    {
+                        "field": "Plan Type",
+                        "cellRenderer": "OptionComponent",
+                        "editable": True,
+                    },
+                    {
+                        "field": "Provider",
+                        "cellRenderer": "OptionComponent",
+                        "editable": True,
+                    },
+                    {
+                        "headerName": "Contract",
+                        "children": [
+                            {
+                                "field": "No Contract",
+                                "cellRenderer": "OptionComponent",
+                                "editable": True,
                             },
-                        }
-                        if col == "Provider"
-                        else {"field": col}
-                    )
-                    for col in product_specifications.columns
+                            {
+                                "field": "12 Month Contract",
+                                "cellRenderer": "OptionComponent",
+                                "editable": True,
+                            },
+                            {
+                                "field": "24 Month Contract",
+                                "cellRenderer": "OptionComponent",
+                                "editable": True,
+                            },
+                            {
+                                "field": "36 Month Contract",
+                                "cellRenderer": "OptionComponent",
+                                "editable": True,
+                            },
+                        ],
+                    },
+                    {
+                        "field": "Minimum Monthly Spend",
+                        "cellRenderer": "OptionComponent",
+                        "editable": True,
+                    },
                 ],
                 defaultColDef={"editable": True},
             ),
@@ -115,6 +145,15 @@ def create_layout():
                             {"field": "Telstra"},
                             {"field": "Optus"},
                             {"field": "Vodafone"},
+                        ],
+                    },
+                    {
+                        "headerName": "Contract",
+                        "children": [
+                            {"field": "No Contract"},
+                            {"field": "12 Month Contract"},
+                            {"field": "24 Month Contract"},
+                            {"field": "NA"},
                         ],
                     },
                     {
@@ -206,3 +245,13 @@ def update_scenario_reflected_grid(_, _scenario_grid_data):
     reflected_data = transform_product_specifications(scenario_grid_df)
     # Convert the transformed DataFrame back to a list of dictionaries for rowData
     return reflected_data.to_dict("records")
+
+
+@callback(
+    Output("scenario_grid", "rowData"),
+    Input("scenario_grid", "cellValueChanged"),
+    State("scenario_grid", "rowData"),
+)
+def update_scenario_grid(_, _scenario_grid_data):
+    # when update the Plan Type, we want to update the grid to have a different option of contract
+    return _scenario_grid_data

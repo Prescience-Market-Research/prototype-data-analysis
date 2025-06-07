@@ -1,15 +1,16 @@
-On/Off,Product,Provider,Plan Type,Network Coverage,Minimum Monthly Spend
-1,1,Telstra,Month to Month,Full Coverage,"$65"
-1,2,Telstra,Month to Month,Full Coverage,"$75"
-1,3,Telstra,Pre-Paid Cap,Full Coverage,"$13"
-1,4,Telstra,Pre-Paid Cap,Full Coverage,"$39"
-1,5,Telstra,Pre-Paid Bulk Buy,Full Coverage,"$180"
-1,6,Optus,Month to Month,Partial Coverage,"$52"
-1,7,Optus,Month to Month,Partial Coverage,"$80"
-1,8,Optus,Pre-Paid Cap,Partial Coverage,"$55"
-1,9,Optus,Pre-Paid Bulk Buy,Partial Coverage,"$320"
-1,10,Vodafone,Month to Month,Partial Coverage,"$49"
-1,11,Vodafone,Pre-Paid Cap,Partial Coverage,"$12"
-1,12,Vodafone,Pre-Paid Cap,Partial Coverage,"$55"
-1,13,Vodafone,Pre-Paid Bulk Buy,Partial Coverage,"$160"
-1,14,Vodafone,Pre-Paid Bulk Buy,Partial Coverage,"$250"
+On/Off,Product,Provider,Plan Type,Contract,,,,Network Coverage,Minimum Monthly Spend
+,,,,No Contract,12 Month Contract,24 Month Contract,36 Month Contract,,
+1,1,Telstra,Month to Month,Not available,Not available,Not available,Not available,Full Coverage,$65
+1,2,Telstra,Month to Month,Not available,Not available,Not available,Not available,Full Coverage,$75
+1,3,Telstra,Pre-Paid Cap,Not available,Not available,Not available,Not available,Full Coverage,$13
+1,4,Telstra,Pre-Paid Cap,No Contract,Not available,Not available,Not available,Full Coverage,$39
+1,5,Telstra,Pre-Paid Bulk Buy,No Contract,Not available,Not available,Not available,Full Coverage,$180
+1,6,Optus,Month to Month,No Contract,12 Month Contract,Not available,Not available,Partial Coverage,$52
+1,7,Optus,Month to Month,No Contract,12 Month Contract,Not available,Not available,Partial Coverage,$80
+1,8,Optus,Pre-Paid Cap,No Contract,Not available,Not available,Not available,Partial Coverage,$55
+1,9,Optus,Pre-Paid Bulk Buy,No Contract,Not available,Not available,Not available,Partial Coverage,$320
+1,10,Vodafone,Month to Month,No Contract,Not available,Not available,Not available,Partial Coverage,$49
+1,11,Vodafone,Pre-Paid Cap,No Contract,Not available,Not available,Not available,Partial Coverage,$12
+1,12,Vodafone,Pre-Paid Cap,No Contract,Not available,Not available,Not available,Partial Coverage,$55
+1,13,Vodafone,Pre-Paid Bulk Buy,Not available,Not available,Not available,Not available,Partial Coverage,$160
+1,14,Vodafone,Pre-Paid Bulk Buy,Not available,Not available,Not available,Not available,Partial Coverage,$250

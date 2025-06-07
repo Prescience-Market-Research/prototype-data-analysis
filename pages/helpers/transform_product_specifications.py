@@ -1,9 +1,18 @@
 import pandas as pd
 
 
-def transform_product_specifications(product_specifications):
+def transform_product_specifications(
+    product_specifications: pd.DataFrame,
+) -> pd.DataFrame:
+    product_specifications = product_specifications.copy()
     provider_cats = ["Telstra", "Optus", "Vodafone"]
     plan_type_cats = ["Month to Month", "Pre-Paid Cap", "Pre-Paid Bulk Buy"]
+    constract_cats = [
+        "No Contract",
+        "12 Month Contract",
+        "24 Month Contract",
+        "Not available",
+    ]
     coverage_cats = [
         "Full Coverage",
         "Broad Coverage",
@@ -19,10 +28,18 @@ def transform_product_specifications(product_specifications):
     product_specifications["Network Coverage"] = pd.Categorical(
         product_specifications["Network Coverage"], categories=coverage_cats
     )
+    # product_specifications["Contract"] = pd.Categorical(
+    #     product_specifications["Contract"], categories=constract_cats
+    # )
 
     # Use get_dummies
     scenario_reflected_data = pd.get_dummies(
-        product_specifications, columns=["Provider", "Plan Type", "Network Coverage"]
+        product_specifications,
+        columns=[
+            "Provider",
+            "Plan Type",
+            "Network Coverage",
+        ],
     )
 
     # Rename to match spec if needed (optional)
