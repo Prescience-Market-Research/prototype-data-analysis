@@ -37,12 +37,14 @@ def create_layout():
                     {"field": "Product"},
                     {
                         "field": "Plan Type",
-                        "cellRenderer": "OptionComponent",
+                        "cellStyle": {
+                            "function": "validatePlanType(params.value)",
+                        },
                         "editable": True,
                     },
                     {
                         "field": "Provider",
-                        "cellRenderer": "OptionComponent",
+                        "cellRenderer": "CustomDropDownComponent",
                         "editable": True,
                     },
                     {
@@ -50,29 +52,29 @@ def create_layout():
                         "children": [
                             {
                                 "field": "No Contract",
-                                "cellRenderer": "OptionComponent",
+                                "cellRenderer": "CustomDropDownComponent",
                                 "editable": True,
                             },
                             {
                                 "field": "12 Month Contract",
-                                "cellRenderer": "OptionComponent",
+                                "cellRenderer": "CustomDropDownComponent",
                                 "editable": True,
                             },
                             {
                                 "field": "24 Month Contract",
-                                "cellRenderer": "OptionComponent",
+                                "cellRenderer": "CustomDropDownComponent",
                                 "editable": True,
                             },
                             {
                                 "field": "36 Month Contract",
-                                "cellRenderer": "OptionComponent",
+                                "cellRenderer": "CustomDropDownComponent",
                                 "editable": True,
                             },
                         ],
                     },
                     {
                         "field": "Minimum Monthly Spend",
-                        "cellRenderer": "OptionComponent",
+                        "cellRenderer": "CustomDropDownComponent",
                         "editable": True,
                     },
                 ],

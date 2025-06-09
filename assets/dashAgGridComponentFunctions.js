@@ -1,6 +1,6 @@
 var dagcomponentfuncs = (window.dashAgGridComponentFunctions =
   window.dashAgGridComponentFunctions || {});
-
+var dagfuncs = (window.dashAgGridFunctions = window.dashAgGridFunctions || {});
 const productSpecRules = {
   Provider: [
     { value: "Telstra", label: "Telstra" },
@@ -83,7 +83,7 @@ const productSpecRules = {
   },
 };
 
-dagcomponentfuncs.OptionComponent = function (props) {
+dagcomponentfuncs.CustomDropDownComponent = function (props) {
   const colName = props.colDef.field;
   const rowData = props.data;
   let options = productSpecRules[colName];
@@ -111,7 +111,7 @@ dagcomponentfuncs.OptionComponent = function (props) {
         width: "100%",
       },
     },
-    options.map(function (option) {
+    options?.map(function (option) {
       return React.createElement(
         "option",
         { key: option.value, value: option.value },
@@ -119,4 +119,47 @@ dagcomponentfuncs.OptionComponent = function (props) {
       );
     })
   );
+};
+
+dagcomponentfuncs.OptionComponent = function (props) {
+  return React.createElement(
+    "select",
+    {
+      onChange: function (event) {
+        props.setValue(event.target.value); // Update the value in Dash
+      },
+      value: props.value,
+      style: {
+        padding: "5px",
+        border: "1px solid #ccc",
+        borderRadius: "4px",
+        backgroundColor: "#f9f9f9",
+        color: "#333",
+        fontSize: "14px",
+        width: "100%",
+      },
+    },
+    props.options.map(function (option) {
+      return React.createElement(
+        "option",
+        { key: option.value, value: option.value },
+        option.label
+      );
+    })
+  );
+};
+
+dagfuncs.validatePlanType = function (planType) {
+  const validPlanTypes = [
+    "Month to Month",
+    "Pre-Paid Cap",
+    "Pre-Paid Bulk Buy",
+  ];
+
+  return validPlanTypes.includes(planType)
+    ? null
+    : {
+        backgroundColor: "red",
+        color: "black",
+      };
 };
